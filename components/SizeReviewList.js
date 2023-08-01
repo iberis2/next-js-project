@@ -1,4 +1,5 @@
 import { formatDate } from '@/util/formatDate'
+import styles from './SizeReviewList.module.css'
 
 const labels = {
   sex: {
@@ -14,16 +15,16 @@ const labels = {
 
 export default function SizeReviewList({ sizeReviews }) {
   return (
-    <ul>
+    <ul className={styles.SizeReviewList}>
       {sizeReviews.map(sizeReview => (
-        <li key={sizeReview.id}>
+        <li key={sizeReview.id} className={styles.sizeReview}>
           <div>
-            <div>{formatDate(new Date(sizeReview.createdAt))}</div>
-            <div>
+            <div className={styles.date}>{formatDate(new Date(sizeReview.createdAt))}</div>
+            <div className={styles.profile}>
               ({labels.sex[sizeReview.sex]} {sizeReview.height}cm 기준) {sizeReview.size}
             </div>
           </div>
-          <div>{labels.fit[sizeReview.fit]}</div>
+          <div className={styles.fit}>{labels.fit[sizeReview.fit]}</div>
         </li>
       ))}
     </ul>

@@ -1,23 +1,25 @@
 import SearchForm from '@/components/SearchForm'
-import Link from 'next/link'
-import styles from '@/styles/Home.module.css'
+import ProductList from '@/components/ProductList'
+import { useState, useEffect } from 'react'
+import { getDatas } from '@/lib/apis'
 
 export default function Home() {
+  const [products, setProducts] = useState([])
+
+  const getProducts = async () => {
+    const res = await getDatas()
+    setProducts(res)
+  }
+
+  useEffect(() => {
+    getProducts()
+  }, [])
+
   return (
     <>
       <h1>Next JS shopping mall</h1>
       <SearchForm />
-      <ul>
-        <li>
-          <Link href='/products/1'>첫 번째 상품</Link>
-        </li>
-        <li>
-          <Link href='/products/2'>두 번째 상품</Link>
-        </li>
-        <li>
-          <Link href='/products/3'>세 번째 상품</Link>
-        </li>
-      </ul>
+      <ProductList products={products} />
     </>
   )
 }
