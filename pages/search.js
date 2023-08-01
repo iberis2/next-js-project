@@ -1,3 +1,5 @@
+import Container from '@/components/Container'
+import Header from '@/components/Header'
 import ProductList from '@/components/ProductList'
 import SearchForm from '@/components/SearchForm'
 import { getDatas } from '@/lib/apis'
@@ -20,10 +22,14 @@ export default function Search() {
 
   return (
     <div>
-      <h1>Search 페이지</h1>
-      <SearchForm initialValue={q} />
-      <p>{q} 검색 결과 </p>
-      <ProductList products={products} />
+      <Header />
+      <Container>
+        <SearchForm initialValue={q} />
+        <h2 className={styles.title}>
+          <span className={styles.keyword}>{q}</span> 검색 결과
+        </h2>
+        <ProductList className={styles.productList} products={products} />
+      </Container>
     </div>
   )
 }

@@ -1,7 +1,10 @@
-import SearchForm from '@/components/SearchForm'
-import ProductList from '@/components/ProductList'
 import { useState, useEffect } from 'react'
+import ProductList from '@/components/ProductList'
+import SearchForm from '@/components/SearchForm'
 import { getDatas } from '@/lib/apis'
+import styles from '@/styles/Home.module.css'
+import Header from '@/components/Header'
+import Container from '@/components/Container'
 
 export default function Home() {
   const [products, setProducts] = useState([])
@@ -17,9 +20,11 @@ export default function Home() {
 
   return (
     <>
-      <h1>Next JS shopping mall</h1>
-      <SearchForm />
-      <ProductList products={products} />
+      <Header />
+      <Container>
+        <SearchForm />
+        <ProductList className={styles.products} products={products} />
+      </Container>
     </>
   )
 }
