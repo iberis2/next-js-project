@@ -2,6 +2,7 @@ import Link from 'next/link'
 import styles from './ProductList.module.css'
 import StarRating from './StarRating'
 import Image from 'next/image'
+import heartImage from '@/public/heart.svg'
 
 export default function ProductList({ className = '', products = [] }) {
   return (
@@ -26,7 +27,10 @@ export default function ProductList({ className = '', products = [] }) {
                   <StarRating value={product.starRating} />
                   {product.starRatingCount.toLocaleString()}
                 </div>
-                <div className={styles.likeCount}>♥{product.likeCount.toLocaleString()}</div>
+                <div className={styles.likeCount}>
+                  <Image src={heartImage} alt='좋아요' />
+                  {product.likeCount.toLocaleString()}
+                </div>
               </div>
             </div>
           </Link>

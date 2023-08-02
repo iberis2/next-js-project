@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from 'react'
+import arrowImg from '@/public/arrow.svg'
 import styles from './Dropdown.module.css'
+import Image from 'next/image'
 
 export default function Dropdown({ className, name, value, options, onChange }) {
   const [isOpen, setIsOpen] = useState(false)
@@ -33,7 +35,7 @@ export default function Dropdown({ className, name, value, options, onChange }) 
   return (
     <div className={classNames} onClick={handleInputClick} onBlur={handleBlur} ref={inputRef}>
       {selectedOption.label}
-      <span className={styles.arrow}>▴</span>
+      <Image src={arrowImg} className={styles.arrow} width={12} height={9} alt='▼' />
       <div className={styles.options}>
         {options.map(option => {
           const selected = value === option.value
