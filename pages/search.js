@@ -1,8 +1,10 @@
 import ProductList from '@/components/ProductList'
 import SearchForm from '@/components/SearchForm'
 import { getDatas } from '@/lib/apis'
+import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import styles from '@/styles/Search.module.css'
 
 export default function Search() {
   const [products, setProducts] = useState([])
@@ -16,10 +18,13 @@ export default function Search() {
 
   useEffect(() => {
     getProducts(q)
-  }, [])
+  }, [q])
 
   return (
     <div>
+      <Head>
+        <title>{q} 검색 결과</title>
+      </Head>
       <SearchForm initialValue={q} />
       <h2 className={styles.title}>
         <span className={styles.keyword}>{q}</span> 검색 결과
