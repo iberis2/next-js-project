@@ -27,10 +27,15 @@
   width: 50%;
 }
 
-.image {
+.imageContainer {
+  position: relative;
   border-radius: 10px;
   width: 100%;
   aspect-ratio: 1 / 1;
+}
+
+.image {
+  object-fit: cover;
 }
 
 .section + .section {
