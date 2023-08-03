@@ -1,21 +1,46 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { getData, getReviews } from '@/lib/apis'
+import { getData, getDatas, getReviews } from '@/lib/apis'
 import SizeReviewList from '@/components/SizeReviewList'
 import StarRating from '@/components/StarRating'
 import styles from '@/styles/Product.module.css'
 import Image from 'next/image'
+import Spinner from '@/components/Spinner'
 
-export default function Product() {
-  const [product, setProduct] = useState()
+export const getStaticPaths = async () => {
+  const products = await getDatas()
+  const paths = products.map(product => ({
+    params: { id: String(product.id) },
+  }))
+
+  return {
+    paths,
+    fallback: true,
+  }
+}
+
+export const getStaticProps = async context => {
+  const productId = context.params['id']
+  let product
+  try {
+    product = await getData(productId)
+  } catch {
+    return {
+      notFound: true,
+    }
+  }
+
+  return {
+    props: {
+      product,
+    },
+  }
+}
+
+export default function Product({ product }) {
   const [sizeReviews, setSizeReviews] = useState([])
   const router = useRouter()
   const { id } = router.query
-
-  const getProduct = async targetId => {
-    const res = await getData(targetId)
-    setProduct(res)
-  }
 
   const getSizeReviews = async targetId => {
     const res = await getReviews(targetId)
@@ -24,11 +49,15 @@ export default function Product() {
 
   useEffect(() => {
     if (!id) return
-    getProduct(id)
     getSizeReviews(id)
   }, [id])
 
-  if (!product) return null
+  if (!product)
+    return (
+      <div className={styles.loading}>
+        <Spinner />
+      </div>
+    )
 
   return (
     <>
