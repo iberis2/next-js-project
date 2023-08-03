@@ -1,9 +1,14 @@
-import { getData, getReviews } from '@/lib/apis'
+import { useState } from 'react'
+import { getData, getReviews, postReviews } from '@/lib/apis'
 import SizeReviewList from '@/components/SizeReviewList'
 import StarRating from '@/components/StarRating'
 import styles from '@/styles/Product.module.css'
 import Image from 'next/image'
 import Spinner from '@/components/Spinner'
+import Dropdown from '@/components/Dropdown'
+import Input from '@/components/Input'
+import Button from '@/components/Button'
+import sizeReviewLabels from '@/util/sizeReviewLabels'
 
 export const getServerSideProps = async context => {
   const productId = context.params['id']
@@ -26,7 +31,39 @@ export const getServerSideProps = async context => {
   }
 }
 
-export default function Product({ product, sizeReviews }) {
+export default function Product({ product, sizeReviews: initialSizeReviews }) {
+  const [sizeReviews, setSizeReviews] = useState(initialSizeReviews)
+  const [formValue, setFormValue] = useState({
+    size: 'M',
+    sex: 'male',
+    height: 173,
+    fit: 'good',
+  })
+
+  const handleSubmit = async e => {
+    e.preventDefault()
+
+    const sizeReview = {
+      ...formValue,
+      productId: product.id,
+    }
+
+    const newReview = await postReviews(sizeReview)
+    setSizeReviews(prev => [newReview, ...prev])
+  }
+
+  const handleChange = (name, value) => {
+    setFormValue({
+      ...formValue,
+      [name]: value,
+    })
+  }
+
+  const handleInputChange = e => {
+    const { name, value } = e.target
+    handleChange(name, value)
+  }
+
   if (!product)
     return (
       <div className={styles.loading}>
@@ -92,6 +129,63 @@ export default function Product({ product, sizeReviews }) {
           </section>
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>사이즈 추천하기</h2>
+            <form className={styles.sizeForm} onSubmit={handleSubmit}>
+              <label className={styles.label}>
+                사이즈
+                <Dropdown
+                  className={styles.input}
+                  name='size'
+                  value={formValue.size}
+                  options={[
+                    { label: 'S', value: 'S' },
+                    { label: 'M', value: 'M' },
+                    { label: 'L', value: 'L' },
+                    { label: 'XL', value: 'XL' },
+                  ]}
+                  onChange={handleChange}
+                />
+              </label>
+              <label className={styles.label}>
+                성별
+                <Dropdown
+                  className={styles.input}
+                  name='sex'
+                  value={formValue.sex}
+                  onChange={handleChange}
+                  options={[
+                    { label: sizeReviewLabels.sex['male'], value: 'male' },
+                    { label: sizeReviewLabels.sex['female'], value: 'female' },
+                  ]}
+                />
+              </label>
+              <label className={styles.label}>
+                키
+                <Input
+                  className={styles.input}
+                  name='height'
+                  min='50'
+                  max='200'
+                  type='number'
+                  value={formValue.height}
+                  onChange={handleInputChange}
+                />
+              </label>
+              <label className={styles.label}>
+                사이즈 추천
+                <Dropdown
+                  className={styles.input}
+                  name='fit'
+                  value={formValue.fit}
+                  options={[
+                    { label: sizeReviewLabels.fit['small'], value: 'small' },
+                    { label: sizeReviewLabels.fit['good'], value: 'good' },
+                    { label: sizeReviewLabels.fit['big'], value: 'big' },
+                  ]}
+                  onChange={handleChange}
+                />
+              </label>
+              <Button className={styles.submit}>작성하기 </Button>
+            </form>
           </section>
         </div>
       </div>
