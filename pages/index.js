@@ -1,21 +1,15 @@
-import { useState, useEffect } from 'react'
 import ProductList from '@/components/ProductList'
 import SearchForm from '@/components/SearchForm'
 import { getDatas } from '@/lib/apis'
 import styles from '@/styles/Home.module.css'
 
-export default function Home() {
-  const [products, setProducts] = useState([])
+export const getStaticProps = async () => {
+  const products = await getDatas()
 
-  const getProducts = async () => {
-    const res = await getDatas()
-    setProducts(res)
-  }
+  return { props: { products } }
+}
 
-  useEffect(() => {
-    getProducts()
-  }, [])
-
+export default function Home({ products }) {
   return (
     <>
       <SearchForm />
