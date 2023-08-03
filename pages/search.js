@@ -2,24 +2,16 @@ import ProductList from '@/components/ProductList'
 import SearchForm from '@/components/SearchForm'
 import { getDatas } from '@/lib/apis'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
 import styles from '@/styles/Search.module.css'
 
-export default function Search() {
-  const [products, setProducts] = useState([])
-  const router = useRouter()
-  const { q } = router.query
+export const getServerSideProps = async context => {
+  const { q } = context.query
+  const products = await getDatas(q)
 
-  const getProducts = async query => {
-    const res = await getDatas(query)
-    setProducts(res)
-  }
+  return { props: { q, products } }
+}
 
-  useEffect(() => {
-    getProducts(q)
-  }, [q])
-
+export default function Search({ q, products }) {
   return (
     <div>
       <Head>
